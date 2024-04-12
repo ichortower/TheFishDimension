@@ -6,6 +6,6 @@
 	"UniqueID": "ichortower.TheFishDimension",
 	"EntryDll": "TheFishDimension.dll",
 	"MinimumApiVersion": "4.0.0",
-	"UpdateKeys": ["Nexus:-1", "GitHub:ichortower/TheFishDimension"],
+	"UpdateKeys": ["Nexus:22335", "GitHub:ichortower/TheFishDimension"],
 	"Dependencies": []
 }
