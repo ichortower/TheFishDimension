@@ -17,6 +17,13 @@ what is checked on the entries in `Data/Objects`:
 
 - must be in the fish category (-4, i.e. actual fish)
 - must have the tag `season_<current season>` OR `season_all`
-- must not have the tag `fish_mines` (mine fish are excluded normally)
+- must not have the tag `fish_mines`
 - must not have the tag `fish_legendary`
 - if the bus is not repaired, must not have the tag `fish_desert`
+- if no player has the dark talisman, must not have the tags `fish_bug_lair`
+   or `fish_swamp`
+- if ginger island is not accessible, must not have the tag `fish_ginger_island`
+
+In order to make the last condition correctly exclude the ginger island fish,
+this mod also adds the `fish_ginger_island` context tag to the three vanilla
+ginger island fish.
