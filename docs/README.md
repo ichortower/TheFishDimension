@@ -3,6 +3,9 @@
 A small, silly mod for Stardew Valley that forces every randomly-generated Help
 Wanted quest to be about fish.
 
+![A collage of Help Wanted requests, all of which are requesting that the
+player catch or deliver fish.](only_fish.png)
+
 ## How it Works
 
 Any generated quest that isn't a `FishingQuest` or an `ItemDeliveryQuest` will
