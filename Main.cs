@@ -16,11 +16,9 @@ namespace ichortower.TheFishDimension
     {
         private const int category_fish = -4;
         private const double chance_fishing = 0.1f / 0.39f;
-        private static IMonitor Mon;
 
         public override void Entry(IModHelper helper)
         {
-            Mon = this.Monitor;
             var harmony = new Harmony(this.ModManifest.UniqueID);
             MethodInfo UtilityGRIFS = typeof(Utility).GetMethod("getRandomItemFromSeason",
                     BindingFlags.Public | BindingFlags.Static,
@@ -54,13 +52,9 @@ namespace ichortower.TheFishDimension
                 return;
             }
             List<string> possibleItems = GetPossibleFish(season);
-            string dbg = "";
-            foreach (string i in possibleItems) {
-                dbg += (dbg == "" ? "" : " ") + i;
+            if (possibleItems.Count > 0) {
+                __result = random.ChooseFrom(possibleItems);
             }
-            Mon.Log($"Choosing from these items: [{dbg}]", LogLevel.Warn);
-            __result = random.ChooseFrom(possibleItems);
-            Mon.Log($"(Chose {__result})", LogLevel.Warn);
         }
 
         public static void getQuestOfTheDay_Postfix(
@@ -72,11 +66,9 @@ namespace ichortower.TheFishDimension
             if (!(__result is FishingQuest) && !(__result is ItemDeliveryQuest)) {
                 double d = Utility.CreateDaySaveRandom(1f, 39f, 23675f).NextDouble();
                 if (d < chance_fishing) {
-                    Mon.Log($"Replacing original quest with FishingQuest", LogLevel.Warn);
                     __result = new FishingQuest();
                 }
                 else {
-                    Mon.Log($"Replacing original quest with ItemDeliveryQuest", LogLevel.Warn);
                     __result = new ItemDeliveryQuest();
                 }
             }
