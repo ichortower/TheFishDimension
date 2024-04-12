@@ -1,7 +1,9 @@
 using HarmonyLib;
 using StardewModdingAPI;
+using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Extensions;
+using StardewValley.GameData.Objects;
 using StardewValley.ItemTypeDefinitions;
 using StardewValley.Quests;
 using System;
@@ -38,6 +40,8 @@ namespace ichortower.TheFishDimension
             harmony.Patch(UtilityPCATT,
                     postfix: new HarmonyMethod(typeof(ModEntry),
                         "possibleCropsAtThisTime_Postfix"));
+
+            helper.Events.Content.AssetRequested += this.OnAssetRequested;
         }
 
         public static void getRandomItemFromSeason_Postfix(
@@ -91,6 +95,8 @@ namespace ichortower.TheFishDimension
             var odd = (ObjectDataDefinition)ItemRegistry.GetTypeDefinition(
                     ItemRegistry.type_object);
             bool allowDesertFish = Utility.doesAnyFarmerHaveMail("ccVault");
+            bool allowTalismanFish = Utility.doesAnyFarmerHaveMail("HasDarkTalisman");
+            bool allowIslandFish = Utility.doesAnyFarmerHaveMail("seenBoatJourney");
             string seasonTag = $"season_{Utility.getSeasonKey(season)}";
             foreach (string id in odd.GetAllIds()) {
                 Item it = ItemRegistry.Create(id);
@@ -98,11 +104,30 @@ namespace ichortower.TheFishDimension
                         it.HasContextTag("!fish_mines") &&
                         it.HasContextTag("!fish_legendary") &&
                         (it.HasContextTag(seasonTag) || it.HasContextTag("season_all")) &&
+                        (allowTalismanFish ||
+                            (it.HasContextTag("!fish_bug_lair") &&
+                             it.HasContextTag("!fish_swamp"))) &&
+                        (allowIslandFish || it.HasContextTag("!fish_ginger_island")) &&
                         (allowDesertFish || it.HasContextTag("!fish_desert"))) {
                     fish.Add(it.ItemId);
                 }
             }
             return fish;
+        }
+
+        public void OnAssetRequested(object sender, AssetRequestedEventArgs e)
+        {
+            if (e.NameWithoutLocale.IsEquivalentTo("Data/Objects")) {
+                string[] ids = {"836", "837", "838"};
+                e.Edit(asset => {
+                    var dict = asset.AsDictionary<string, ObjectData>();
+                    foreach (string id in ids) {
+                        if (!dict.Data[id].ContextTags.Contains("fish_ginger_island")) {
+                            dict.Data[id].ContextTags.Add("fish_ginger_island");
+                        }
+                    }
+                });
+            }
         }
     }
 }
