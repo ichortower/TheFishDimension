@@ -94,9 +94,11 @@ namespace ichortower.TheFishDimension
             string seasonTag = $"season_{Utility.getSeasonKey(season)}";
             foreach (string id in odd.GetAllIds()) {
                 Item it = ItemRegistry.Create(id);
-                if (it.Category == category_fish && it.HasContextTag("!fish_mines") &&
-                        (it.HasContextTag(seasonTag) || it.HasContextTag("season_all") &&
-                        it.HasContextTag((allowDesertFish ? "" : "!") + "fish_desert"))) {
+                if (it.Category == category_fish &&
+                        it.HasContextTag("!fish_mines") &&
+                        it.HasContextTag("!fish_legendary") &&
+                        (it.HasContextTag(seasonTag) || it.HasContextTag("season_all")) &&
+                        (allowDesertFish || it.HasContextTag("!fish_desert"))) {
                     fish.Add(it.ItemId);
                 }
             }
